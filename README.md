@@ -1,4 +1,6 @@
-# BotSpot - Scala framwork for Telegram bots
+# BotSpot 
+
+BotSpot is a Scala framework for Telegram bots based on Akka.
 
 ## Usage
 
