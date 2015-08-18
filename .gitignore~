@@ -1,0 +1,16 @@
+.idea/
+target/
+update_id*
+
+node_modules
+.sass-cache
+bower_components
+.sbtserver/
+.sbtserver*
+
+/logs
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID

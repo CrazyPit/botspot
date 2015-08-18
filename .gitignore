@@ -1,0 +1,13 @@
+.idea/
+target/
+update_id*
+
+.sbtserver/
+.sbtserver*
+
+/logs
+/.idea_modules
+/.classpath
+/.project
+/.settings
+/RUNNING_PID
