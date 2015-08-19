@@ -10,8 +10,9 @@ import com.typesafe.config._
  */
 
 
-class BotRunner(botConfig: BotConfig, config: Config, val factoryFunc: Config => BotController) extends Actor {
-
+class BotRunner(config: Config, val factoryFunc: Config => BotController) extends Actor {
+  val botConfig =
+       BotConfig(config.getInt("bot.id"), config.getString("bot.token"))
   val messageReceiver =
     context.actorOf(MessageReceiver.props(botConfig), "messagesReceiver")
   val logicManager  = context.actorOf(BotLogicManager.props(config, factoryFunc), "botLogicManager")
@@ -26,7 +27,7 @@ class BotRunner(botConfig: BotConfig, config: Config, val factoryFunc: Config =>
 
 
 object BotRunner {
-  def props(botConfig: BotConfig, config: Config, factoryFunc: Config => BotController): Props = {
-    Props(new BotRunner(botConfig, config, factoryFunc))
+  def props(config: Config, factoryFunc: Config => BotController): Props = {
+    Props(new BotRunner(config, factoryFunc))
   }
 }
