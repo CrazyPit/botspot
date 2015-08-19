@@ -22,7 +22,7 @@ class TelegramAPIInteractor(config: Config) extends Actor {
   override def receive = {
     case TelegramApiCall(_interactionCall: SendMessageCall) => {
       telegram.sendMessage(_interactionCall.asInstanceOf[SendMessageCall])
-      //PeekMailboxExtension.ack()
+      PeekMailboxExtension.ack()
     }
     case TelegramApiCall(_interactionCall: SendPhotoCall) => {
       telegram.sendPhoto(_interactionCall.asInstanceOf[SendPhotoCall])
