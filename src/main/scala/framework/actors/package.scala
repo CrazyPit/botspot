@@ -1,7 +1,6 @@
 package botspot.framework
 
-import botspot.api.InteractionCall
-import botspot.api.models.{Update, Message}
+import botspot.api.models.{Message, Update}
 
 /**
  * Created by petrrezikov on 15.08.15.
@@ -14,6 +13,5 @@ package object actors {
   case class UpdateId(updateId: Int)
   case class GetUpdates(updateId: Int)
   case class SetUpdateId(updateId: Int)
-  case class TelegramApiCall(interactionCall: InteractionCall)
 
 }

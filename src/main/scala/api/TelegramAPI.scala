@@ -39,13 +39,13 @@ case class SendDocumentCall(
                              chatId: Int,
                              document: String,
                              replyToMessageId: Option[Int] = None,
-                             reply: Option[Reply] = None) extends InteractionCall
+                             replyMarkup: Option[Reply] = None) extends InteractionCall
 
 case class SendStickerCall(
                             chatId: Int,
                             sticker: String,
                             replyToMessageId: Option[Int] = None,
-                            reply: Option[Reply] = None) extends InteractionCall
+                            replyMarkup: Option[Reply] = None) extends InteractionCall
 
 case class SendVideoCall(
                           chatId: Int,
@@ -92,31 +92,23 @@ class TelegramAPI(botConfig: BotConfig) {
     new Bot(botConfig.id, botConfig.token, user.firstName, user.lastName, user.username )
   }
 
-  def sendMessage(sendMessageCall: SendMessageCall): Unit = {
-    val params = Utils.mapClassToSeq(sendMessageCall)
-    telegramJsonRequest("sendMessage", params)
-  }
-
   def sendMessage(
                    chatId: Int,
                    text: String,
                    disableWebPagePreview: Option[Boolean] = None,
                    replyToMessageId: Option[Int] = None,
                    replyMarkup: Option[Reply] = None): Unit = {
-    sendMessage(SendMessageCall(chatId, text, disableWebPagePreview, replyToMessageId, replyMarkup))
+    val params = Utils.mapClassToSeq(SendMessageCall(chatId, text, disableWebPagePreview, replyToMessageId, replyMarkup))
+    telegramJsonRequest("sendMessage", params)
   }
 
   def forwardMessage(
                       chatId: Int,
                       fromChatId: Int,
                       messageId: Int): Unit = {
+
     val params = Utils.mapClassToSeq(ForwardMessageCall(chatId, fromChatId, messageId))
     telegramJsonRequest("forwardMessage", params)
-  }
-
-  def sendPhoto(sendPhotoCall: SendPhotoCall): Unit = {
-    val params = Utils.mapClassToSeq(sendPhotoCall)
-    telegramJsonRequest("sendPhoto", params)
   }
 
   def sendPhoto(
@@ -126,7 +118,8 @@ class TelegramAPI(botConfig: BotConfig) {
                  replyToMessageId: Option[Int] = None,
                  replyMarkup: Option[Reply] = None): Unit = {
     // TODO file uploading (if photo - InputStream)
-    sendPhoto(SendPhotoCall(chatId, photo, caption, replyToMessageId, replyMarkup))
+    val params = Utils.mapClassToSeq(SendPhotoCall(chatId, photo, caption, replyToMessageId, replyMarkup))
+    telegramJsonRequest("sendPhoto", params)
   }
 
   def sendAudio(
@@ -195,7 +188,7 @@ class TelegramAPI(botConfig: BotConfig) {
                             userId: Int,
                             offset: Option[Int] = None,
                             limit: Option[Int] = None): Unit = {
-    // TODO implement
+    // TODO implement in special actor
   }
 
 
