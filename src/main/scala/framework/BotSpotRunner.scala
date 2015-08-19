@@ -17,10 +17,16 @@ import botspot.api.models.BotConfig
 class BotSpotRunner(val botName: String, configFileName: String,
                     val botLogicFactoryFunc: Config => BotController) {
 
+
   def run(): Unit = {
     // TODO: add error checking
     val config = ConfigFactory.parseFile(new File(configFileName))
-    val system = ActorSystem(botName)
-    system.actorOf(BotRunner.props(config.getConfig(botName), botLogicFactoryFunc), "controller")
+    val botConfig = BotConfig(config.getInt(s"$botName.bot.id"), config.getString(s"$botName.bot.token"))
+    val system = ActorSystem(botName, ConfigFactory.parseString( """
+                                          telegram-http-dispatcher {
+                                            mailbox-type = "akka.contrib.mailbox.PeekMailboxType"
+                                            max-retries = 5
+                                          }"""))
+    system.actorOf(BotRunner.props(botConfig, config.getConfig(botName), botLogicFactoryFunc), "controller")
   }
 }
