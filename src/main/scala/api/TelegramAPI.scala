@@ -80,7 +80,9 @@ object Utils {
     renameTo("resizeKeyboard", "resize_keyboard") orElse renameTo("oneTimeKeyboard", "one_time_keyboard")
   )
 
-  implicit val formats = Serialization.formats(NoTypeHints) + renameKeyboard
+  val renameHide = FieldSerializer[ReplyKeyboardHide](renameTo("hideKeyboard", "hide_keyboard"))
+
+  implicit val formats = Serialization.formats(NoTypeHints) + renameKeyboard + renameHide
 
   def mapClassToSeq(mes: AnyRef) = {
     mes.getClass.getDeclaredFields.map(f => {
