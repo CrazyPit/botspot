@@ -1,8 +1,11 @@
 package botspot.api
 
 import botspot.api.models._
+import org.json4s.FieldSerializer._
 import org.json4s._
 import org.json4s.jackson.JsonMethods._
+import org.json4s.jackson.Serialization
+import org.json4s.jackson.Serialization.write
 
 import scalaj.http.{HttpRequest, Http}
 
@@ -72,10 +75,21 @@ case class GetUserProfilePhotosCall(
                                      limit: Option[Int])
 
 object Utils {
+
+  val renameKeyboard = FieldSerializer[ReplyKeyboardMarkup](
+    renameTo("resizeKeyboard", "resize_keyboard") orElse renameTo("oneTimeKeyboard", "one_time_keyboard")
+  )
+
+  implicit val formats = Serialization.formats(NoTypeHints) + renameKeyboard
+
   def mapClassToSeq(mes: AnyRef) = {
     mes.getClass.getDeclaredFields.map(f => {
       f.setAccessible(true)
+
+      println(f.get(mes))
       camelToUnderscores(f.getName) -> (f.get(mes) match {
+        case Some(x: Reply) => println("reply:" + write(x))
+          write(x)
         case None => f.get(mes)
         case x: Option[Any] => x.get
         case _ => f.get(mes)
@@ -99,6 +113,7 @@ class TelegramAPI(botConfig: BotConfig) {
                    replyToMessageId: Option[Int] = None,
                    replyMarkup: Option[Reply] = None): Unit = {
     val params = Utils.mapClassToSeq(SendMessageCall(chatId, text, disableWebPagePreview, replyToMessageId, replyMarkup))
+    params.foreach(println)
     telegramJsonRequest("sendMessage", params)
   }
 
