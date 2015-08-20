@@ -3,7 +3,7 @@ package botspot.framework
 import akka.actor.ActorRef
 import botspot.api.TelegramAPI
 import botspot.api._
-import botspot.api.models.{BotConfig, Message}
+import botspot.api.models.{Reply, BotConfig, Message}
 import com.typesafe.config._
 
 
@@ -20,10 +20,10 @@ class BotController(val config: Config) {
 
   def telegramApiInteractor = _telegramApiInteractor
 
-  def telegramApiInteractor_= (value: Option[ActorRef]): Unit = _telegramApiInteractor = value
+  def telegramApiInteractor_=(value: Option[ActorRef]): Unit = _telegramApiInteractor = value
 
-  protected def sendMessageToId(receiverId: Int, text: String) =
-    telegram.sendMessage(receiverId, text)
+  protected def sendMessageToId(receiverId: Int, text: String, replyMarkup: Option[Reply] = None) =
+    telegram.sendMessage(receiverId, text, replyMarkup = replyMarkup)
 
   protected def sendStickerToId(receiverId: Int, sticker: String) =
     telegram.sendSticker(receiverId, sticker)
@@ -41,9 +41,10 @@ class BotController(val config: Config) {
   // Asynchronous version of Telegram API calls, that sends message to special actor
 
   protected def sendMessageToIdAsync(receiverId: Int, text: String) = {
-    telegramApiInteractor.get ! SendMessageCall(receiverId, text)  }
+    telegramApiInteractor.get ! SendMessageCall(receiverId, text)
+  }
 
-  protected def sendStickerToIdAsync(receiverId: Int, sticker: String)=
+  protected def sendStickerToIdAsync(receiverId: Int, sticker: String) =
     telegramApiInteractor.get ! SendStickerCall(receiverId, sticker)
 
   protected def sendAudioToIdAsync(receiverId: Int, audio: String) =
