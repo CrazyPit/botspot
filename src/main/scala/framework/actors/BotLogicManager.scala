@@ -4,6 +4,7 @@ import java.net.SocketTimeoutException
 
 import akka.actor.SupervisorStrategy.{Restart, Escalate}
 import akka.actor._
+import akka.event.Logging
 import botspot.api.models.Message
 import botspot.framework.BotController
 import com.typesafe.config._
@@ -16,6 +17,8 @@ import scala.concurrent.ExecutionContext.Implicits.global
  * Created by petrrezikov on 16.08.15.
  */
 class BotLogicManager(config: Config, factory: Config => BotController) extends Actor {
+
+  val log = Logging(context.system, this)
 
   var telegramApiInteractor: Option[ActorRef] = None
 

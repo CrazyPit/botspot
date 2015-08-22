@@ -3,6 +3,7 @@ package botspot.framework
 import java.io.File
 
 import akka.actor.ActorSystem
+import akka.event.Logging
 import botspot.framework.actors.BotRunner
 import com.typesafe.config.{Config, ConfigFactory}
 

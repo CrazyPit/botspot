@@ -1,6 +1,7 @@
 package botspot.framework.actors
 
 import akka.actor.{Props, Actor}
+import akka.event.Logging
 import botspot.api.models.BotConfig
 import botspot.framework.BotController
 import com.typesafe.config._
@@ -11,6 +12,8 @@ import com.typesafe.config._
 
 
 class BotRunner(config: Config, val factoryFunc: Config => BotController) extends Actor {
+
+  val log = Logging(context.system, this)
   val botConfig =
        BotConfig(config.getInt("bot.id"), config.getString("bot.token"))
   val messageReceiver =

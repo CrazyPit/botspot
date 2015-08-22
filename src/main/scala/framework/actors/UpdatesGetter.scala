@@ -3,6 +3,7 @@ package botspot.framework.actors
 import java.net.SocketTimeoutException
 
 import akka.actor.{Props, Actor}
+import akka.event.Logging
 import botspot.api.TelegramAPI
 import botspot.api.models.BotConfig
 
@@ -12,6 +13,8 @@ import botspot.api.models.BotConfig
 
 
 class UpdatesGetter(val botConfig: BotConfig) extends Actor {
+
+  val log = Logging(context.system, this)
 
   private val telegram = new TelegramAPI(botConfig)
   private val pollingTimeout = 2
@@ -25,7 +28,10 @@ class UpdatesGetter(val botConfig: BotConfig) extends Actor {
         context.parent ! UpdatesReceived(updates)
       }
       catch {
-        case e: SocketTimeoutException => self ! GetUpdates(updateId)
+        case e: Throwable => {
+          self ! GetUpdates(updateId)
+          log.warning(e.toString)
+        }
       }
     }
   }

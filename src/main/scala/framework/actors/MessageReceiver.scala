@@ -1,5 +1,6 @@
 package botspot.framework.actors
 import akka.actor.{Props, Actor}
+import akka.event.Logging
 import botspot.api.models.BotConfig
 
 /**
@@ -8,6 +9,7 @@ import botspot.api.models.BotConfig
 
 class MessageReceiver(val botConfig: BotConfig) extends Actor {
 
+  val log = Logging(context.system, this)
   val updatesGetter = context.actorOf(UpdatesGetter.props(botConfig), "updatesGetter")
   val updateIdManager = context.actorOf(UpdateIdManager.props(botConfig.id), "updateIdManager")
 

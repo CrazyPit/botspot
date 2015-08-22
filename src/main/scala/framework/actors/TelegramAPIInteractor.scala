@@ -3,6 +3,7 @@ package framework.actors
 import akka.actor.{Actor, Props}
 import akka.contrib.mailbox.PeekMailboxExtension
 import akka.contrib.pattern.ReceivePipeline
+import akka.event.Logging
 import botspot.api.models.BotConfig
 import botspot.api.{TelegramAPI, _}
 import com.typesafe.config.Config
@@ -14,6 +15,8 @@ import com.typesafe.config.Config
  */
 
 class TelegramAPIInteractor(config: Config) extends Actor with ReceivePipeline {
+
+  val log = Logging(context.system, this)
 
   protected val botConfig = BotConfig(config.getInt("bot.id"), config.getString("bot.token"))
 

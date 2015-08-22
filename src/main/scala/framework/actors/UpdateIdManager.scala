@@ -3,6 +3,7 @@ package botspot.framework.actors
 import java.io.File
 
 import akka.actor.{Props, Actor}
+import akka.event.Logging
 
 import scala.io.Source
 
@@ -10,6 +11,9 @@ import scala.io.Source
  * Created by petrrezikov on 16.08.15.
  */
 class UpdateIdManager(val botId: Int) extends Actor {
+
+
+  val log = Logging(context.system, this)
 
   var updateId = readUpdateId()
 
